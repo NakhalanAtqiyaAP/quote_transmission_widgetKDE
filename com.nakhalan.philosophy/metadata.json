@@ -1,6 +1,7 @@
 
 {
   "KPlugin": {
+    "X-Plasma-ConfigModel": "contents/ui/configGeneral.qml",
     "Id": "com.nakhalan.philosophy",
     "Name": "Philosophy Transmission",
     "Description": "Philosophical quotes in a neon terminal style",
