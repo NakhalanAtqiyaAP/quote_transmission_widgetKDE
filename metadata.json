@@ -1,0 +1,19 @@
+
+{
+  "KPlugin": {
+    "Id": "com.nakhalan.philosophy",
+    "Name": "Philosophy Transmission",
+    "Description": "Philosophical quotes in a neon terminal style",
+    "Category": "Utilities",
+    "Icon": "accessories-dictionary",
+    "Version": "1.0",
+    "Authors": [
+      {
+        "Name": "Nakhalan Atqiya"
+      }
+    ],
+    "License": "MIT"
+  },
+  "KPackageStructure": "Plasma/Applet",
+  "X-Plasma-API-Minimum-Version": "6.0"
+}
