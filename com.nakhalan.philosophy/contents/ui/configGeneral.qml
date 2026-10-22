@@ -7,8 +7,6 @@ import org.kde.kirigami as Kirigami
 Kirigami.FormLayout {
     id: page
 
-    twinFormLayouts: true
-
     property alias cfg_intervalSeconds: interval.value
     property alias cfg_quoteColor: quoteColor.text
     property alias cfg_accentColor: accentColor.text
@@ -45,5 +43,6 @@ Kirigami.FormLayout {
     Controls.CheckBox {
         id: showAuthor
         text: "Show philosopher name"
+        Kirigami.FormData.label: "Author"
     }
 }
