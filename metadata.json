@@ -2,8 +2,8 @@
 {
   "KPlugin": {
     "Id": "com.nakhalan.philosophy",
-    "Name": "Philosophy Transmission",
-    "Description": "Philosophical quotes in a neon terminal style",
+    "Name": "Quote Trannsmission",
+    "Description": "Quotes in a neon terminal style",
     "Category": "Utilities",
     "Icon": "accessories-dictionary",
     "Version": "1.0",
