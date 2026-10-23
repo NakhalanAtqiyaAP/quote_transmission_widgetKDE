@@ -7,14 +7,12 @@ import org.kde.kirigami as Kirigami
 Kirigami.FormLayout {
     id: page
 
-    // Property alias cfg_* dihubungkan langsung ke nilai kontrol
     property alias cfg_intervalSeconds: interval.value
     property alias cfg_quoteColor: quoteColorValue.text
     property alias cfg_accentColor: accentColorValue.text
     property alias cfg_fontSize: fontSize.value
     property alias cfg_showAuthor: showAuthor.checked
 
-    // Hidden textfield untuk menyimpan string hex warna yang dihubungkan ke KConfig
     Controls.TextField {
         id: quoteColorValue
         visible: false

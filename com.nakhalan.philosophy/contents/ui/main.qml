@@ -1,22 +1,19 @@
-
 import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-
 PlasmoidItem {
     id: root
 
     width: 650
-    height: 200
+    height: 180
 
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
 
     property int quoteIndex: 0
 
-    // Safe defaults if configuration values are not set yet.
     readonly property int rotationInterval:
         Math.max(15, Plasmoid.configuration.intervalSeconds || 120) * 1000
 
@@ -68,7 +65,21 @@ PlasmoidItem {
     ]
 
     function nextQuote() {
-        quoteIndex = (quoteIndex + 1) % quotes.length
+        triggerTransition(() => {
+            quoteIndex = (quoteIndex + 1) % quotes.length
+        })
+    }
+
+    function prevQuote() {
+        triggerTransition(() => {
+            quoteIndex = (quoteIndex - 1 + quotes.length) % quotes.length
+        })
+    }
+
+    function triggerTransition(changeQuoteCallback) {
+        contentContainer.opacity = 0
+        fadeTimer.callback = changeQuoteCallback
+        fadeTimer.start()
     }
 
     function copyQuote() {
@@ -81,11 +92,21 @@ PlasmoidItem {
     }
 
     Timer {
+        id: fadeTimer
+        interval: 150
+        repeat: false
+        property var callback: null
+        onTriggered: {
+            if (callback) callback()
+            contentContainer.opacity = 1
+        }
+    }
+
+    Timer {
         id: rotationTimer
         interval: root.rotationInterval
         running: true
         repeat: true
-
         onTriggered: root.nextQuote()
     }
 
@@ -98,17 +119,21 @@ PlasmoidItem {
     }
 
     ColumnLayout {
+        id: contentContainer
         anchors.fill: parent
-        spacing: 10
+        spacing: 12
+
+        Behavior on opacity {
+            NumberAnimation { duration: 200 }
+        }
 
         Text {
             Layout.fillWidth: true
-            text: "// PHILOSOPHICAL_TRANSMISSION"
+            text: "“"
             color: root.accentColor
             font.family: "monospace"
-            font.pixelSize: 11
-            font.letterSpacing: 3
-            elide: Text.ElideRight
+            font.pixelSize: 28
+            font.bold: true
         }
 
         Text {
@@ -127,10 +152,9 @@ PlasmoidItem {
 
         RowLayout {
             Layout.fillWidth: true
-            spacing: 12
+            spacing: 8
 
             Text {
-                Layout.fillWidth: true
                 visible: root.showAuthor
                 text: "— " + root.quotes[root.quoteIndex].author
                 color: root.accentColor
@@ -139,6 +163,10 @@ PlasmoidItem {
                 font.letterSpacing: 1
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
+            }
+
+            Item {
+                Layout.fillWidth: true
             }
 
             Controls.ToolButton {
@@ -150,20 +178,20 @@ PlasmoidItem {
             }
 
             Controls.ToolButton {
+                text: "< PREV"
+                display: Controls.AbstractButton.TextOnly
+                onClicked: root.prevQuote()
+                Controls.ToolTip.visible: hovered
+                Controls.ToolTip.text: "Previous quote"
+            }
+
+            Controls.ToolButton {
                 text: "NEXT >"
                 display: Controls.AbstractButton.TextOnly
                 onClicked: root.nextQuote()
                 Controls.ToolTip.visible: hovered
                 Controls.ToolTip.text: "Next quote"
             }
-        }
-
-        Text {
-            Layout.fillWidth: true
-            text: "> reflect_on_this_"
-            color: root.accentColor
-            font.family: "monospace"
-            font.pixelSize: 11
         }
     }
 }

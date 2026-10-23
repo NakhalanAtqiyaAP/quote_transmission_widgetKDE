@@ -6,7 +6,7 @@
   <kcfgfile name=""/>
   <group name="General">
     <entry name="intervalSeconds" type="Int">
-      <default>60</default>
+      <default>120</default>
     </entry>
     <entry name="quoteColor" type="String">
       <default>#75ff91</default>
@@ -15,7 +15,7 @@
       <default>#37d66b</default>
     </entry>
     <entry name="fontSize" type="Int">
-      <default>16</default>
+      <default>17</default>
     </entry>
     <entry name="showAuthor" type="Bool">
       <default>true</default>
