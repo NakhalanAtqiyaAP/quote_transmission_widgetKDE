@@ -26,5 +26,9 @@ var data = [
     {
         "author": "SENECA",
         "text": "Difficulties strengthen the mind, as labor does the body."
+    },
+     {
+        "author": "Alfred Adler",
+        "text": "Life now and here."
     }
 ];
