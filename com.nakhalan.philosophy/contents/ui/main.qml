@@ -1,9 +1,10 @@
 import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
-import QtGraphicsEffects
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
+
+import "quotes.js" as QuotesData
 
 PlasmoidItem {
     id: root
@@ -14,20 +15,7 @@ PlasmoidItem {
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
 
     property int quoteIndex: 0
-    property var quotes: []
-
-    Component.onCompleted: loadQuotes()
-
-    function loadQuotes() {
-        const doc = new XMLHttpRequest()
-        doc.open("GET", Qt.resolvedUrl("../data/quotes.json"))
-        doc.onreadystatechange = function() {
-            if (doc.readyState === XMLHttpRequest.DONE && doc.status === 200) {
-                root.quotes = JSON.parse(doc.responseText)
-            }
-        }
-        doc.send()
-    }
+    property var quotes: QuotesData.data
 
     readonly property int rotationInterval:
         Math.max(15, Plasmoid.configuration.intervalSeconds || 120) * 1000
@@ -47,6 +35,8 @@ PlasmoidItem {
 
     readonly property bool showAuthor:
         Plasmoid.configuration.showAuthor !== false
+
+    property string copyBtnLabel: "COPY"
 
     function nextQuote() {
         if (quotes.length === 0) return
@@ -77,7 +67,7 @@ PlasmoidItem {
         copyHelper.copy()
         copyHelper.deselect()
 
-        copyButton.text = "COPIED!"
+        copyBtnLabel = "COPIED!"
         osdResetTimer.start()
     }
 
@@ -96,7 +86,7 @@ PlasmoidItem {
         id: osdResetTimer
         interval: 1500
         repeat: false
-        onTriggered: copyButton.text = "COPY"
+        onTriggered: copyBtnLabel = "COPY"
     }
 
     Timer {
@@ -147,7 +137,7 @@ PlasmoidItem {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            text: root.quotes.length > 0 ? root.quotes[root.quoteIndex].text : "Loading quotes..."
+            text: root.quotes[root.quoteIndex].text
             color: root.quoteColor
             font.family: "monospace"
             font.pixelSize: root.quoteFontSize
@@ -166,8 +156,8 @@ PlasmoidItem {
             spacing: 12
 
             Text {
-                visible: root.showAuthor && root.quotes.length > 0
-                text: "— " + (root.quotes[root.quoteIndex] ? root.quotes[root.quoteIndex].author : "")
+                visible: root.showAuthor
+                text: "— " + root.quotes[root.quoteIndex].author
                 color: root.accentColor
                 font.family: "monospace"
                 font.pixelSize: 12
@@ -183,11 +173,9 @@ PlasmoidItem {
 
             Controls.ToolButton {
                 id: copyButton
-                text: "COPY"
-                display: Controls.AbstractButton.TextOnly
                 onClicked: root.copyQuote()
                 contentItem: Text {
-                    text: copyButton.text
+                    text: root.copyBtnLabel
                     font.family: "monospace"
                     font.pixelSize: 11
                     font.bold: true
@@ -199,11 +187,9 @@ PlasmoidItem {
 
             Controls.ToolButton {
                 id: prevButton
-                text: "< PREV"
-                display: Controls.AbstractButton.TextOnly
                 onClicked: root.prevQuote()
                 contentItem: Text {
-                    text: prevButton.text
+                    text: "< PREV"
                     font.family: "monospace"
                     font.pixelSize: 11
                     font.bold: true
@@ -215,11 +201,9 @@ PlasmoidItem {
 
             Controls.ToolButton {
                 id: nextButton
-                text: "NEXT >"
-                display: Controls.AbstractButton.TextOnly
                 onClicked: root.nextQuote()
                 contentItem: Text {
-                    text: nextButton.text
+                    text: "NEXT >"
                     font.family: "monospace"
                     font.pixelSize: 11
                     font.bold: true
